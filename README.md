@@ -1,7 +1,7 @@
 # 🌐 LinguaFlow — Translation Suite
 
 ```
-frontend.py  ──HTTP/JSON──►  backend.py  ──calls──►  api.py  ──►  Google Cloud / gTTS
+frontend.py  ──HTTP/JSON──►  backend.py  ──calls──►  api.py  ──►  Translation API / gTTS
   (Streamlit UI)               (Flask REST)           (API layer)
 ```
 
@@ -13,9 +13,7 @@ frontend.py  ──HTTP/JSON──►  backend.py  ──calls──►  api.py 
 lingua_pro/
 ├── frontend.py       ← Streamlit UI        (calls Flask backend over HTTP)
 ├── backend.py        ← Flask REST API      (validation, routing, business logic)
-├── api.py            ← API call layer      (Google Cloud Translation + gTTS)
-├── .env              ← Your secrets        (never commit this)
-├── .env.example      ← Copy → .env and add your key
+├── api.py            ← API call layer      (Translation API + gTTS)
 ├── requirements.txt
 └── README.md
 ```
@@ -31,30 +29,6 @@ lingua_pro/
 | POST   | `/translate`  | Translate text between languages         |
 | POST   | `/speak`      | Convert text to speech (returns base64 MP3) |
 | POST   | `/swap`       | Swap source ↔ target language + text     |
-
----
-
-## 1. Get Your Google Cloud API Key
-
-1. Go to → https://console.cloud.google.com/
-2. Create a project (or select existing)
-3. Go to **APIs & Services → Library**
-4. Search **"Cloud Translation API"** → Enable it
-5. Go to **APIs & Services → Credentials**
-6. Click **"+ Create Credentials" → API Key**
-7. Copy the key
-
----
-
-## 2. Add Your API Key
-
-```bash
-# Copy the example file
-cp .env.example .env
-
-# Open .env and paste your key
-GOOGLE_API_KEY=AIzaSyXXXXXXXXXXXXXXXXXXXXXXXXXXX
-```
 
 ---
 
@@ -98,11 +72,9 @@ backend.py  (Flask)
   │           call_tts_api(text, lang)
   ▼
 api.py
-  │  reads:  GOOGLE_API_KEY from .env
-  │  POST → https://translation.googleapis.com/language/translate/v2
-  │  gTTS → Google TTS (no key needed)
+  │  Translation API + gTTS
   ▼
-Google Cloud Translation API  +  gTTS
+Translation API  +  gTTS
 ```
 
 ---
@@ -111,7 +83,6 @@ Google Cloud Translation API  +  gTTS
 
 | Variable        | File      | Required | Default              | Description                          |
 |-----------------|-----------|----------|----------------------|--------------------------------------|
-| `GOOGLE_API_KEY`| `.env`    | ✅ Yes   | —                    | Google Cloud Translation API key     |
 | `BACKEND_URL`   | `.env`    | No       | `http://localhost:5000` | Flask server URL (frontend uses this) |
 | `FLASK_RUN_PORT`| `.env`    | No       | `5000`               | Port for Flask server                |
 | `FLASK_DEBUG`   | `.env`    | No       | `false`              | Enable Flask debug mode              |
@@ -120,7 +91,7 @@ Google Cloud Translation API  +  gTTS
 
 ## Swapping the Translation Provider
 
-All API logic lives in `api.py`. To replace Google Cloud with another provider, only edit `call_translation_api()` — `backend.py` and `frontend.py` stay unchanged.
+All API logic lives in `api.py`. To replace the current provider with another, only edit `call_translation_api()` — `backend.py` and `frontend.py` stay unchanged.
 
 ```python
 # Example: DeepL
