@@ -420,7 +420,7 @@ st.markdown("""
                   text-transform:uppercase;font-weight:600;">Translation Suite</div>
     </div>
   </div>
-  <span class="badge">Google Cloud API · gTTS · Flask</span>
+  <span class="badge"> API · gTTS · Flask</span>
 </div>
 """, unsafe_allow_html=True)
 
